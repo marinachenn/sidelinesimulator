@@ -5,7 +5,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
  * @returns {Promise<Array<{ title: string, description?: string, url: string }>>}
  */
 export async function fetchVideos() {
-  const response = await fetch(`${API_BASE_URL}/videos`);
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/videos`);
 
   if (!response.ok) {
     throw new Error('Failed to load videos.');
