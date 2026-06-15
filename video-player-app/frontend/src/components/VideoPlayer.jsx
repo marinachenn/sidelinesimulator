@@ -1,128 +1,41 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { isYouTubeUrl, getYouTubeEmbedUrl } from '../api/videoApi';
 import styles from './VideoPlayer.module.css';
 
-const MAX_PLAYS = 3;
-
 /**
- * Reusable video player that plays a given video exactly three times,
- * then stops and shows a completion message.
+ * Plays a single video — HTML5 for direct URLs, iframe embed for YouTube.
  */
-export default function VideoPlayer({ videoUrl, onReplay }) {
-  const videoRef = useRef(null);
-  const [playCount, setPlayCount] = useState(0);
-  const [finished, setFinished] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+export default function VideoPlayer({ video }) {
+  if (!video) return null;
 
-  // Reset state when a new video is loaded
-  useEffect(() => {
-    setPlayCount(0);
-    setFinished(false);
-    setIsPlaying(false);
-  }, [videoUrl]);
-
-  const handleLoadedData = useCallback(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.play().catch((err) => {
-        console.error('Autoplay failed:', err);
-      });
-    }
-  }, []);
-
-  const handlePlay = useCallback(() => {
-    setIsPlaying(true);
-  }, []);
-
-  const handlePause = useCallback(() => {
-    setIsPlaying(false);
-  }, []);
-
-  /**
-   * When the video ends: replay if under 3 plays, otherwise stop and show finished state.
-   */
-  const handleEnded = useCallback(() => {
-    setPlayCount((prev) => {
-      const nextCount = prev + 1;
-
-      if (nextCount < MAX_PLAYS) {
-        const video = videoRef.current;
-        if (video) {
-          video.currentTime = 0;
-          video.play().catch((err) => {
-            console.error('Replay failed:', err);
-          });
-        }
-      } else {
-        setFinished(true);
-        setIsPlaying(false);
-      }
-
-      return nextCount;
-    });
-  }, []);
-
-  const handleReplay = useCallback(() => {
-    setPlayCount(0);
-    setFinished(false);
-    const video = videoRef.current;
-    if (video) {
-      video.currentTime = 0;
-      video.play().catch((err) => {
-        console.error('Replay failed:', err);
-      });
-    }
-    onReplay?.();
-  }, [onReplay]);
-
-  const currentRepeat = finished
-    ? MAX_PLAYS
-    : isPlaying
-      ? playCount + 1
-      : Math.max(playCount, 1);
+  const isYouTube = isYouTubeUrl(video.url);
 
   return (
     <div className={styles.playerWrapper}>
       <div className={styles.videoContainer}>
-        <video
-          ref={videoRef}
-          className={styles.video}
-          src={videoUrl}
-          controls
-          playsInline
-          onLoadedData={handleLoadedData}
-          onPlay={handlePlay}
-          onPause={handlePause}
-          onEnded={handleEnded}
-        />
+        {isYouTube ? (
+          <iframe
+            className={styles.iframe}
+            src={getYouTubeEmbedUrl(video.url)}
+            title={video.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <video
+            className={styles.video}
+            src={video.url}
+            controls
+            playsInline
+            autoPlay
+          />
+        )}
       </div>
-
-      {videoUrl && !finished && (
-        <div className={styles.progress}>
-          <span className={styles.progressLabel}>Playing</span>
-          <div className={styles.progressDots}>
-            {Array.from({ length: MAX_PLAYS }, (_, i) => (
-              <span
-                key={i}
-                className={`${styles.dot} ${i < currentRepeat ? styles.dotActive : ''}`}
-              />
-            ))}
-          </div>
-          <span className={styles.progressText}>
-            Repeat {currentRepeat} of {MAX_PLAYS}
-          </span>
-        </div>
-      )}
-
-      {finished && (
-        <div className={styles.finished}>
-          <p className={styles.finishedMessage}>
-            Finished! Click Play Random Video to watch another.
-          </p>
-          <button className={styles.replayButton} onClick={handleReplay} type="button">
-            Replay This Video
-          </button>
-        </div>
-      )}
+      <div className={styles.meta}>
+        <h2 className={styles.title}>{video.title}</h2>
+        {video.description && (
+          <p className={styles.description}>{video.description}</p>
+        )}
+      </div>
     </div>
   );
 }

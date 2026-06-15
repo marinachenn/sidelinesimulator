@@ -1,25 +1,32 @@
-// Base API URL — uses env var in production, empty string in dev (Vite proxy handles it)
 export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 /**
- * Fetches a random video URL from the backend.
- * @returns {Promise<{ url: string } | { error: string }>}
+ * Fetches the video catalog from the backend.
+ * @returns {Promise<Array<{ title: string, description?: string, url: string }>>}
  */
-export async function fetchRandomVideo() {
-  const response = await fetch(`${API_BASE_URL}/api/random-video`);
-
-  const data = await response.json();
+export async function fetchVideos() {
+  const response = await fetch(`${API_BASE_URL}/videos`);
 
   if (!response.ok) {
-    throw new Error(data.error || 'Failed to fetch random video.');
+    throw new Error('Failed to load videos.');
   }
 
-  return data;
+  return response.json();
 }
 
 /**
- * Builds the full video URL from a relative path returned by the API.
+ * Returns true if the URL points to a YouTube video.
  */
-export function getVideoUrl(relativePath) {
-  return `${API_BASE_URL}${relativePath}`;
+export function isYouTubeUrl(url) {
+  return /(?:youtube\.com|youtu\.be)/.test(url);
+}
+
+/**
+ * Converts a YouTube watch/share URL into an embeddable iframe URL.
+ */
+export function getYouTubeEmbedUrl(url) {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match ? `https://www.youtube.com/embed/${match[1]}` : url;
 }

@@ -1,80 +1,75 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import VideoPlayer from './components/VideoPlayer';
-import { fetchRandomVideo, getVideoUrl } from './api/videoApi';
+import VideoGallery from './components/VideoGallery';
+import { fetchVideos } from './api/videoApi';
 import styles from './App.module.css';
 
 export default function App() {
-  const [currentVideo, setCurrentVideo] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handlePlayRandom = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    setCurrentVideo(null);
-
-    try {
-      const data = await fetchRandomVideo();
-      setCurrentVideo(getVideoUrl(data.url));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    async function loadVideos() {
+      try {
+        const data = await fetchVideos();
+        setVideos(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
+
+    loadVideos();
   }, []);
 
   return (
     <div className={styles.app}>
       <main className={styles.main}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Random Video Player</h1>
+          <h1 className={styles.title}>Video Library</h1>
           <p className={styles.subtitle}>
-            Press play and watch a random video three times in a row
+            Pick a video from the gallery below
           </p>
         </header>
 
-        <div className={styles.card}>
-          <button
-            className={styles.playButton}
-            onClick={handlePlayRandom}
-            disabled={loading}
-            type="button"
-          >
-            {loading ? (
-              <>
-                <span className={styles.spinner} aria-hidden="true" />
-                Loading...
-              </>
+        {loading && (
+          <div className={styles.loading}>
+            <span className={styles.spinner} aria-hidden="true" />
+            Loading videos...
+          </div>
+        )}
+
+        {error && (
+          <div className={styles.error} role="alert">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && (
+          <>
+            {selectedVideo ? (
+              <section className={styles.playerSection}>
+                <VideoPlayer key={selectedVideo.url} video={selectedVideo} />
+              </section>
             ) : (
-              <>
-                <span className={styles.playIcon} aria-hidden="true">▶</span>
-                Play Random Video
-              </>
+              <div className={styles.placeholder}>
+                <p>Select a video to start watching</p>
+              </div>
             )}
-          </button>
 
-          {error && (
-            <div className={styles.error} role="alert">
-              {error === 'No videos available.' || error.includes('No videos')
-                ? 'No videos have been uploaded.'
-                : error}
-            </div>
-          )}
-
-          {currentVideo && (
-            <VideoPlayer
-              key={currentVideo}
-              videoUrl={currentVideo}
-            />
-          )}
-
-          {!currentVideo && !loading && !error && (
-            <div className={styles.placeholder}>
-              <div className={styles.placeholderIcon}>🎬</div>
-              <p>Click the button above to start watching</p>
-            </div>
-          )}
-        </div>
+            <section className={styles.gallerySection}>
+              <h2 className={styles.sectionTitle}>Browse</h2>
+              <VideoGallery
+                videos={videos}
+                selectedVideo={selectedVideo}
+                onSelect={setSelectedVideo}
+              />
+            </section>
+          </>
+        )}
       </main>
     </div>
   );

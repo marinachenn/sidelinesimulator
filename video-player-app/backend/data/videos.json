@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Big Buck Bunny",
+    "description": "Open-source animated short film",
+    "url": "https://www.w3schools.com/html/mov_bbb.mp4"
+  },
+  {
+    "title": "Sample Clip (5s)",
+    "description": "Short sample video for testing",
+    "url": "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+  },
+  {
+    "title": "Sample Clip (10s)",
+    "description": "Longer sample video for testing",
+    "url": "https://samplelib.com/lib/preview/mp4/sample-10s.mp4"
+  }
+]

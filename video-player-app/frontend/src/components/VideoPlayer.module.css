@@ -1,10 +1,8 @@
 .playerWrapper {
   width: 100%;
-  max-width: 800px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .videoContainer {
@@ -12,114 +10,38 @@
   border-radius: 16px;
   overflow: hidden;
   background: #0f172a;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   aspect-ratio: 16 / 9;
 }
 
-.video {
+.video,
+.iframe {
   width: 100%;
   height: 100%;
   display: block;
+  border: none;
+}
+
+.video {
   object-fit: contain;
 }
 
-.progress {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 1.5rem;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  width: 100%;
-  transition: opacity 0.3s ease;
+.meta {
+  padding: 0 0.25rem;
 }
 
-.progressLabel {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #6366f1;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.progressDots {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #cbd5e1;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.dotActive {
-  background: #6366f1;
-  transform: scale(1.2);
-}
-
-.progressText {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #334155;
-}
-
-.finished {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 12px;
-  width: 100%;
-  animation: fadeIn 0.4s ease;
-}
-
-.finishedMessage {
+.title {
   margin: 0;
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: #166534;
-  text-align: center;
-}
-
-.replayButton {
-  padding: 0.625rem 1.5rem;
-  font-size: 0.9rem;
+  font-size: 1.35rem;
   font-weight: 600;
-  color: #6366f1;
-  background: white;
-  border: 2px solid #6366f1;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  color: #0f172a;
 }
 
-.replayButton:hover {
-  background: #6366f1;
-  color: white;
-  transform: translateY(-1px);
-}
-
-.replayButton:active {
-  transform: translateY(0);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.description {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.5;
 }
 
 @media (max-width: 640px) {
@@ -127,11 +49,7 @@
     border-radius: 12px;
   }
 
-  .progress {
-    padding: 0.875rem 1rem;
-  }
-
-  .finishedMessage {
-    font-size: 0.95rem;
+  .title {
+    font-size: 1.15rem;
   }
 }
