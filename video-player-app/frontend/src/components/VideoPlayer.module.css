@@ -44,6 +44,14 @@
   line-height: 1.5;
 }
 
+.repeatLabel {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6366f1;
+  text-align: center;
+}
+
 @media (max-width: 640px) {
   .videoContainer {
     border-radius: 12px;

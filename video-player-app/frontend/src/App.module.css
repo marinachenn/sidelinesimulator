@@ -98,6 +98,78 @@
   color: #334155;
 }
 
+.randomButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  align-self: center;
+  padding: 1rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.randomButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.45);
+}
+
+.randomButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.playIcon {
+  font-size: 0.85rem;
+}
+
+.playerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.primaryButton {
+  color: white;
+  background: #6366f1;
+  border: none;
+}
+
+.primaryButton:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.secondaryButton {
+  color: #6366f1;
+  background: white;
+  border: 2px solid #6366f1;
+}
+
+.secondaryButton:hover {
+  background: #eef2ff;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 640px) {
   .main {
     padding: 1.5rem 1rem 2rem;
